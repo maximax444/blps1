@@ -19,6 +19,8 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
 
 	List<Product> findAllByStatusIsFalse();
 
+	List<Product> findAllByName(String name);
+
 	void deleteAllByOwner(Customer customer);
 
 }

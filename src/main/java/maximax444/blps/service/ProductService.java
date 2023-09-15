@@ -86,20 +86,17 @@ public class ProductService implements ProductInterface {
 		}
 		System.out.println("before3");
 		if (recomendedProducts.size() <= 3) {
-			Product product = new Product();
-			product.setOwner(customer);
-			product.setName(productDTO.getName());
-			product.setPrice(productDTO.getPrice());
-			product.setCount(productDTO.getCount());
-			List<Ordered> allOrderedWithProduct = orderedRepository.findAllByProduct(product);
+			List<Product> products = productRepository.findAllByName(productDTO.getName());
+			List<Ordered> allOrderedWithProduct = orderedRepository.findAllByProduct(products.get(0));
 			List<Order> allOrdersWithProduct = new ArrayList<>();
 			for (Ordered itWp : allOrderedWithProduct) {
 				allOrdersWithProduct.add(itWp.getOrder());
 			}
-			for (Order itOrd2 : relOrders) {
+			for (Order itOrd2 : allOrdersWithProduct) {
 				for (Ordered itProd2 : orderedRepository.findAllByOrder(itOrd2)) {
-
-					recomendedProducts.add(itProd2.getProduct());
+					if (!itProd2.getProduct().getName().equals(productDTO.getName())) {
+						recomendedProducts.add(itProd2.getProduct());
+					}
 				}
 			}
  		}

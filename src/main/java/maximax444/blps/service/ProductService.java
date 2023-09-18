@@ -10,6 +10,7 @@ import maximax444.blps.repository.OrderedRepository;
 import maximax444.blps.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -53,7 +54,7 @@ public class ProductService implements ProductInterface {
 		productRepository.deleteAllByOwner(customer);
 	}
 
-
+	@Transactional
 	public Product createProduct(ProductDTO productDTO, Customer customer) {
 		Product product = new Product();
 		product.setOwner(customer);

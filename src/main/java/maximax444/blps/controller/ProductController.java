@@ -8,7 +8,6 @@ import maximax444.blps.service.CustomerInterface;
 import maximax444.blps.service.CustomerService;
 import maximax444.blps.service.ProductInterface;
 import maximax444.blps.service.ProductService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;

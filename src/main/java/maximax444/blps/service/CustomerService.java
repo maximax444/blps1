@@ -6,7 +6,9 @@ import maximax444.blps.entity.Customer;
 import maximax444.blps.repository.CustomerRepository;
 import maximax444.blps.security.MyResourceNotFoundException;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
+
+import java.util.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -15,9 +17,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -33,14 +32,16 @@ public class CustomerService implements CustomerInterface {
 	public String login(String username, String password) {
 		Optional<Customer> customer = customerRepository.login(username, password);
 		if (customer.isPresent()) {
-			String token = UUID.randomUUID().toString();
+			Base64.Encoder encoder = Base64.getEncoder();
+			String token = new String(encoder.encode(username.getBytes())) +
+					":" + new String(encoder.encode(password.getBytes()));
 			Customer custom = customer.get();
 			custom.setToken(token);
 			customerRepository.save(custom);
 			return token;
 		}
 
-		return StringUtils.EMPTY;
+		return "";
 	}
 
 	@Override
@@ -83,9 +84,9 @@ public class CustomerService implements CustomerInterface {
 
 	@Override
 	public Optional<Customer> whoIs(HttpServletRequest httpServletRequest) {
-		String token = StringUtils.isNotEmpty(httpServletRequest.getHeader(AUTHORIZATION)) ?
+		String token = !Objects.equals(httpServletRequest.getHeader(AUTHORIZATION), "") ?
 				httpServletRequest.getHeader(AUTHORIZATION) : "";
-		token = StringUtils.removeStart(token, "Bearer").trim();
+		token = token.replaceAll("Basic", "").trim();
 		return customerRepository.findByToken(token);
 	}
 

@@ -41,7 +41,7 @@ public class Customer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Customer customer = (Customer) o;
-        return banned == customer.banned && Objects.equals(id, customer.id) && Objects.equals(userName, customer.userName) && Objects.equals(password, customer.password) && Objects.equals(token, customer.token);
+        return Objects.equals(userName, customer.userName) && Objects.equals(password, customer.password);
     }
 
     @Override
